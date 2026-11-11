@@ -40,6 +40,8 @@ class CadastroIntegrationTest {
                 .andExpect(status().isConflict());
         http.perform(post("/api/alunos").header("Authorization", bearer).contentType(MediaType.APPLICATION_JSON).content("{}"))
                 .andExpect(status().isBadRequest());
+        http.perform(post("/api/alunos").header("Authorization", bearer).contentType(MediaType.APPLICATION_JSON)
+                .content(corpo.replace("Ana", " A ").replace("001", "002"))).andExpect(status().isBadRequest());
         http.perform(get("/api/alunos?tamanho=101").header("Authorization", bearer)).andExpect(status().isBadRequest());
         http.perform(get("/api/alunos").header("Authorization", bearer)).andExpect(jsonPath("$.content[0].matricula").value("001"));
         http.perform(put("/api/alunos/" + id).header("Authorization", bearer).contentType(MediaType.APPLICATION_JSON)

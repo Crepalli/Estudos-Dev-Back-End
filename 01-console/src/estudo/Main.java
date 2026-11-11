@@ -8,8 +8,9 @@ public final class Main {
         AlunoService service = new AlunoService(new AlunoEmMemoriaRepository());
         try (Scanner teclado = new Scanner(System.in, "UTF-8")) { // Fecha o recurso ao terminar.
             boolean executando = true;
-            while (executando && teclado.hasNextLine()) { // Repete até sair ou acabar a entrada.
+            while (executando) { // Mostra o menu antes de aguardar a entrada do usuário.
                 System.out.println("\n1 Cadastrar | 2 Listar | 3 Buscar | 4 Editar | 5 Remover | 0 Sair");
+                if (!teclado.hasNextLine()) break; // Também encerra ao acabar uma entrada redirecionada de arquivo.
                 String opcao = teclado.nextLine().trim(); // Lê tudo como texto para evitar problemas com nextInt().
                 try {
                     switch (opcao) {

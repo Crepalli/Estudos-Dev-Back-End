@@ -16,6 +16,7 @@ public class AlunoService {
     public AlunoService(AlunoRepository repository) { this.repository = repository; }
 
     public AlunoResponse criar(AlunoRequest dados) {
+        validarNome(dados.nome());
         if (repository.existsByMatricula(dados.matricula())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Matrícula já cadastrada.");
         }
@@ -33,6 +34,7 @@ public class AlunoService {
     public AlunoResponse buscar(Long id) { return AlunoResponse.from(encontrar(id)); }
 
     public AlunoResponse editar(Long id, AlunoRequest dados) {
+        validarNome(dados.nome());
         Aluno aluno = encontrar(id);
         if (!aluno.getMatricula().equals(dados.matricula())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A matrícula não pode ser alterada.");
@@ -42,6 +44,12 @@ public class AlunoService {
     }
 
     public void remover(Long id) { repository.delete(encontrar(id)); }
+
+    private void validarNome(String nome) {
+        if (nome.trim().length() < 2) { // Espaços não contam como letras de um nome válido.
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O nome deve ter pelo menos dois caracteres sem contar espaços nas extremidades.");
+        }
+    }
 
     private Aluno encontrar(Long id) {
         return repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Aluno não encontrado."));
