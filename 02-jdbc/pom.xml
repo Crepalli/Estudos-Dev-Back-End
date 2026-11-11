@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>br.estudo</groupId><artifactId>cadastro-jdbc</artifactId><version>1.0.0</version>
+  <properties><maven.compiler.release>17</maven.compiler.release><project.build.sourceEncoding>UTF-8</project.build.sourceEncoding></properties>
+  <dependencies>
+    <!-- H2 permite aprender SQL sem instalar um servidor de banco. -->
+    <dependency><groupId>com.h2database</groupId><artifactId>h2</artifactId><version>2.3.232</version></dependency>
+  </dependencies>
+  <build><plugins>
+    <!-- Reutiliza os contratos da etapa anterior, sem copiar suas classes. -->
+    <plugin><groupId>org.codehaus.mojo</groupId><artifactId>build-helper-maven-plugin</artifactId><version>3.6.1</version><executions><execution><id>console</id><phase>generate-sources</phase><goals><goal>add-source</goal></goals><configuration><sources><source>../01-console/src</source></sources></configuration></execution></executions></plugin>
+    <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-compiler-plugin</artifactId><version>3.14.0</version></plugin>
+    <plugin><groupId>org.codehaus.mojo</groupId><artifactId>exec-maven-plugin</artifactId><version>3.5.0</version><configuration><mainClass>estudo.jdbc.MainJdbc</mainClass></configuration></plugin>
+  </plugins></build>
+</project>

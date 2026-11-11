@@ -1,0 +1,54 @@
+<main>
+  <header><p>PROJETO DE ESTUDO</p><h1>Cadastro de alunos</h1><p>Alunos e endereços em um só lugar.</p></header>
+  <!-- aria-live anuncia mensagens de resultado a quem usa leitor de tela. -->
+  <p class="aviso" aria-live="polite">{{ mensagem }}</p>
+  @if (!conectado) {
+    <section><h2>Entrar</h2>
+      <form #login="ngForm" (ngSubmit)="entrar(login)">
+        <label>Usuário<input name="usuario" [(ngModel)]="usuario" required maxlength="100" autocomplete="username"></label>
+        <label>Senha<input name="senha" [(ngModel)]="senha" type="password" required maxlength="72" autocomplete="current-password"></label>
+        <button [disabled]="ocupado || login.invalid">Entrar</button>
+      </form>
+    </section>
+  } @else {
+    <button type="button" (click)="sair()" [disabled]="ocupado">Sair</button>
+    <section><h2>{{ idEdicao === undefined ? 'Novo aluno' : 'Editar aluno' }}</h2>
+      <!-- ngForm reúne os campos; ngModel liga o valor digitado à propriedade TypeScript. -->
+      <form #cadastro="ngForm" (ngSubmit)="salvar(cadastro)">
+        <fieldset [disabled]="ocupado"><legend>Dados pessoais</legend>
+          <label>Matrícula<input name="matricula" [(ngModel)]="dados.matricula" required pattern="[A-Za-z0-9-]{1,30}" maxlength="30" [readonly]="idEdicao !== undefined"></label>
+          <label>Nome<input name="nome" [(ngModel)]="dados.nome" required minlength="2" maxlength="120" autocomplete="name"></label>
+          <label>E-mail<input name="email" [(ngModel)]="dados.email" required email maxlength="160" type="email" autocomplete="email"></label>
+        </fieldset>
+        <fieldset [disabled]="ocupado"><legend>Endereço</legend>
+          <label>CEP (oito dígitos)<input name="cep" [(ngModel)]="dados.endereco.cep" required pattern="[0-9]{8}" maxlength="8" inputmode="numeric" autocomplete="postal-code"></label>
+          <button type="button" (click)="consultarCep()">Consultar CEP</button>
+          <label>Logradouro<input name="logradouro" [(ngModel)]="dados.endereco.logradouro" required maxlength="150" autocomplete="address-line1"></label>
+          <label>Número<input name="numero" [(ngModel)]="dados.endereco.numero" required maxlength="20"></label>
+          <label>Cidade<input name="cidade" [(ngModel)]="dados.endereco.cidade" required maxlength="120" autocomplete="address-level2"></label>
+          <label>UF<input name="uf" [(ngModel)]="dados.endereco.uf" required pattern="[A-Za-z]{2}" maxlength="2" autocomplete="address-level1"></label>
+        </fieldset>
+        @if (cadastro.invalid && cadastro.touched) { <p>Preencha os campos obrigatórios e confira seus formatos.</p> }
+        <button [disabled]="ocupado || cadastro.invalid">Salvar aluno</button>
+        <button type="button" (click)="cancelar(cadastro)" [disabled]="ocupado">Limpar / cancelar</button>
+      </form>
+    </section>
+    <section><h2>Alunos cadastrados</h2>
+      @if (ocupado) { <p role="status">Processando…</p> }
+      <div class="tabela"><table>
+        <caption>Cadastro de alunos — página {{ pagina + 1 }}</caption>
+        <thead><tr><th scope="col">Matrícula</th><th scope="col">Nome</th><th scope="col">E-mail</th><th scope="col">Cidade</th><th scope="col">Ações</th></tr></thead>
+        <tbody>
+          @for (aluno of alunos; track aluno.id) {
+            <tr><td>{{ aluno.matricula }}</td><td>{{ aluno.nome }}</td><td>{{ aluno.email }}</td><td>{{ aluno.endereco.cidade }}</td>
+              <td><button type="button" (click)="editar(aluno)" [disabled]="ocupado" [attr.aria-label]="'Editar ' + aluno.nome">Editar</button>
+              <button type="button" (click)="excluir(aluno, cadastro)" [disabled]="ocupado" [attr.aria-label]="'Excluir ' + aluno.nome">Excluir</button></td></tr>
+          } @empty { <tr><td colspan="5">Nenhum aluno cadastrado.</td></tr> }
+        </tbody>
+      </table></div>
+      <nav aria-label="Paginação"><button (click)="carregar(pagina - 1)" [disabled]="ocupado || pagina === 0">Anterior</button>
+        <span>Página {{ pagina + 1 }} de {{ totalPaginas || 1 }}</span>
+        <button (click)="carregar(pagina + 1)" [disabled]="ocupado || pagina + 1 >= totalPaginas">Próxima</button></nav>
+    </section>
+  }
+</main>

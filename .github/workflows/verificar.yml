@@ -1,0 +1,36 @@
+name: Verificar projeto de estudo
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  verificar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+      - name: Compilar e verificar console
+        working-directory: 01-console
+        run: |
+          mkdir -p target
+          javac -encoding UTF-8 -d target src/estudo/*.java Verificar.java
+          java -cp target Verificar
+      - name: Verificar CRUD JDBC em banco temporário
+        working-directory: 02-jdbc
+        run: mvn -B compile exec:java -Dexec.args='jdbc:h2:mem:ci;DB_CLOSE_DELAY=-1'
+      - name: Verificar API e autenticação
+        working-directory: 03-api
+        run: mvn -B verify
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Compilar tela Angular e verificar tipos
+        working-directory: 04-frontend
+        run: |
+          npm install --no-audit --no-fund
+          npm run build

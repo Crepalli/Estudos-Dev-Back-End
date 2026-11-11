@@ -1,0 +1,14 @@
+/* Estilos globais: contraste, espaçamento e foco visível ajudam a usar o formulário. */
+:root { font-family: system-ui, sans-serif; color: #183245; background: #edf3f5; }
+body { margin: 0; } main { max-width: 1000px; margin: auto; padding: 24px; }
+header > p:first-child { font-size: .75rem; letter-spacing: .15em; color: #246868; font-weight: 700; }
+h1 { font-size: clamp(1.8rem, 5vw, 2.8rem); margin: 8px 0; } h2 { margin-top: 0; }
+section { padding: 24px; background: white; border: 1px solid #d4e1e7; border-radius: 12px; margin: 20px 0; }
+fieldset { border: 1px solid #c6d4dc; border-radius: 8px; margin: 16px 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+label { display: grid; gap: 6px; margin: 12px 0; } input { padding: 10px; font: inherit; border: 1px solid #849ca9; border-radius: 6px; min-width: 0; }
+button { padding: 10px 14px; font: inherit; background: #165e67; color: white; border: 0; border-radius: 6px; margin: 4px; cursor: pointer; align-self: end; }
+button:disabled { opacity: .55; cursor: default; } :focus-visible { outline: 3px solid #b56500; outline-offset: 3px; }
+.aviso { min-height: 24px; font-weight: 600; } .tabela { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; } caption { text-align: left; padding: 12px 0; } th, td { text-align: left; padding: 12px; border-bottom: 1px solid #d4e1e7; }
+nav { display: flex; justify-content: space-between; align-items: center; margin-top: 16px; }
+@media (max-width: 500px) { main { padding: 12px; } section { padding: 14px; } nav { flex-wrap: wrap; } }
